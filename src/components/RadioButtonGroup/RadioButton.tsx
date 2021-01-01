@@ -1,5 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
+import {CustomRadio } from '../types'
 
 export type HTMLInputValue = string | number | readonly string[] | undefined
 export interface RadioValue<T> {
@@ -15,13 +16,17 @@ type RadioButtonProps<T> = {
     setActive: (id: string) => void,
     activeClassName?: string | undefined,
 
+    customStyles?: CustomRadio | ( () => CustomRadio ),
+
     id: string,
     className?: string
 }
 
 const RadioButton = <T,>(
-    { name, value, onChange, isActive, setActive, activeClassName, id, className }: RadioButtonProps<T>
+    { name, value, onChange, isActive, setActive, activeClassName, customStyles, id, className }: RadioButtonProps<T>
 ) => {
+    const custom = typeof customStyles === 'function' ? customStyles() : customStyles
+
     return (
         <label 
             htmlFor={id}
@@ -30,8 +35,10 @@ const RadioButton = <T,>(
             }}
             className={classNames(
                 className,
-                isActive && activeClassName
+                isActive && activeClassName,
+                custom?.className
             )}
+            style={custom?.style}
         >
             <input
                 type="radio"
@@ -40,10 +47,10 @@ const RadioButton = <T,>(
                 value={value}
                 onChange={e => onChange(e.currentTarget.value)}
                 id={id}
-                className=""
+                className={custom && 'border-0 m-0 appearance-none'}
                 required
             />
-            { value }
+            { custom ? '' : value }
         </label>
     )
 }

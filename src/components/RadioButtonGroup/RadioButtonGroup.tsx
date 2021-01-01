@@ -1,14 +1,16 @@
 import * as React from 'react'
 import RadioButton, { RadioValue, HTMLInputValue } from './RadioButton'
+import { CustomRadio } from '../types'
 
-interface RadioButtonGroupProps<T> {
+interface RadioButtonGroupProps<Value> {
     name: string,
     label: string,
-    values: RadioValue<T>[],
+    values: RadioValue<Value>[],
     onChange: (val: HTMLInputValue) => void
+    customRadioButton?: CustomRadio | ((isActive: boolean, value: any) => CustomRadio)
 }
 
-const RadioButtonGroup = <T,>({name, label, values, onChange}: RadioButtonGroupProps<T>) => {
+const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}: RadioButtonGroupProps<T>) => {
     const [activeButton, setActiveButton] = React.useState<HTMLInputValue>('')
     return(
         <fieldset id={`${name}-form`} name={name}>
@@ -16,19 +18,21 @@ const RadioButtonGroup = <T,>({name, label, values, onChange}: RadioButtonGroupP
                 {label}
             </legend>
             {
-                values.map(value => {
-                    const inputId = `${name}-radio--${value.key}`
+                values.map(v => {
+                    const { key, value } = v
+                    const inputId = `${name}-radio--${key}`
+                    const isActive = inputId === activeButton
                     return(
                         <RadioButton
                             key={inputId}
                             name={name}
-                            value={value.key}
+                            value={key}
                             onChange={onChange}
-                            isActive={inputId === activeButton}
+                            isActive={isActive}
                             setActive={setActiveButton}
                             activeClassName="text-green-500"
                             id={inputId}
-                            className=""
+                            customStyles={typeof customRadioButton === 'function' ? customRadioButton(isActive, value) : customRadioButton}
                         />
                     )
                 })

@@ -2,12 +2,12 @@ import React from 'react'
 import { LichessRating, CardColorState, CardIconState }  from './types'
 import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
-import ColorIcon from './RadioButtonGroup/ColorIcon/ColorIcon'
 import TextInput from './TextInput/TextInput'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
 import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
 import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
+import { colorRadioButton } from './RadioButtonGroup/ColorIcon/ColorIcon'
 
 export default function CardCustomization() {
     const [user, setUser] = React.useState<string>('')
@@ -118,12 +118,8 @@ export default function CardCustomization() {
                 name="cardColor"
                 label="Select a color for your card."
                 values={cardColorOptions}
-                onChange={(v: HTMLInputValue) => {
-                  console.log("Radio button clicked")
-                  console.log(v)
-                  console.log(cardColorOptions.find(c => c.key === v))
-                  setCardColor(cardColorOptions.find(c => c.key === v)!.value)
-                }}
+                onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
+                customRadioButton={colorRadioButton}
               />     
               <RadioButtonGroup<CardIconState>
                 name="cardIcon"
@@ -134,12 +130,14 @@ export default function CardCustomization() {
             </fieldset>
           </form>
           <div className="flex flex-col align-center">
-            <Canvas 
-              username={user}
-              ratings={ratings}
-              color={cardColor}
-              icon={cardIcon}
-            />
+            <div className="flex justify-center">
+              <Canvas 
+                username={user}
+                ratings={ratings}
+                color={cardColor}
+                icon={cardIcon}
+              />
+            </div>
             <div className="flex flex-row justify-center mt-8">
               <Button className="mr-4">Download card</Button>
               <Button>Instagram story...</Button>

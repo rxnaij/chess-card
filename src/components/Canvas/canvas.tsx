@@ -1,16 +1,8 @@
-import Konva from 'konva'
 import React from 'react'
+import Konva from 'konva'
 import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
 import { LichessRating, CardColorState, CardIconState } from '../types'
-import bishopIcon from '../../assets/icons/icons8-knight-100-2.png'
-
-export type CardProps = {
-    username: string,
-    ratings: LichessRating[],
-    color: CardColorState,
-    icon?: CardIconState | undefined,
-}
 
 type IconProps = {
     x: number,
@@ -28,7 +20,7 @@ const PieceIcon = ({ x, y, icon }: IconProps) => {
  * The returned icon should be rendered in the Lichess font.
  * @param name the name of the time control
  */
-const getIcon = (name: string) => {
+const getRatingIcon = (name: string) => {
     const check = name.toLowerCase()
     switch (check) {
         case 'bullet':
@@ -68,7 +60,7 @@ const RatingText = ({ ratings, x, y, fill }: RatingTextProps ) => {
                     console.log('i: ' + i, 'x: ' + newX, 'y: ' + y )
                     return (
                         <Group key={rating.name} x={newX}>
-                            <Text {...textProps} fontFamily="lichess" text={getIcon(rating.name)}/>
+                            <Text {...textProps} fontFamily="lichess" text={getRatingIcon(rating.name)}/>
                             <Text {...textProps} x={18} text={rating.points[0][3].toString()}/>
                         </Group>
                     )
@@ -76,15 +68,6 @@ const RatingText = ({ ratings, x, y, fill }: RatingTextProps ) => {
             }
         </Group>
     )
-}
-
-const mainColor = (v: CardColorState) => {
-    if (!v) return '#212121'
-    if (v instanceof Array) {
-        return `linear-gradient(0deg, ${v[0]} 50%, ${v[1]} 50%)`
-    } else {
-        return v
-    }
 }
 
 // function from https://stackoverflow.com/a/15832662/512042
@@ -95,6 +78,13 @@ function downloadURI(uri: string, name: string) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+type CardProps = {
+    username: string,
+    ratings: LichessRating[],
+    color: CardColorState,
+    icon?: CardIconState | undefined,
 }
 
 export default function Canvas({ username="Your username", ratings, color, icon='' }: CardProps) {
@@ -113,6 +103,10 @@ export default function Canvas({ username="Your username", ratings, color, icon=
     };
 
     const usernameRef = React.useRef<Konva.Text>(null!)
+
+    React.useEffect(() => {
+
+    }, [])
 
     return (
         <Stage
@@ -148,6 +142,7 @@ export default function Canvas({ username="Your username", ratings, color, icon=
                     <Text
                         ref={usernameRef}
                         fontFamily="Overpass"
+                        fontStyle="bold"
                         fontWeight={900}
                         text={username && '@' + username}
                         x={CARD_WIDTH / 2}
