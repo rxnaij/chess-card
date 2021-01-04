@@ -7,7 +7,7 @@ export interface RadioValue<T> {
     key: HTMLInputValue,
     value: T
 }
-type RadioButtonProps<T> = {
+export type RadioButtonProps<T> = {
     name: string,
     value: HTMLInputValue,
     onChange: (value: HTMLInputValue) => void,

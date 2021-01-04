@@ -8,9 +8,10 @@ interface RadioButtonGroupProps<Value> {
     values: RadioValue<Value>[],
     onChange: (val: HTMLInputValue) => void
     customRadioButton?: CustomRadio | ((isActive: boolean, value: any) => CustomRadio)
+    customButton?: typeof RadioButton
 }
 
-const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}: RadioButtonGroupProps<T>) => {
+const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton, customButton}: RadioButtonGroupProps<T>) => {
     const [activeButton, setActiveButton] = React.useState<HTMLInputValue>('')
     return(
         <fieldset id={`${name}-form`} name={name}>
@@ -23,8 +24,9 @@ const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}
                     const inputId = `${name}-radio--${key}`
                     const isActive = inputId === activeButton
                     const crb = typeof customRadioButton === 'function' ? customRadioButton(isActive, value) : customRadioButton
+                    const RenderedButton: typeof RadioButton = customButton || RadioButton
                     return(
-                        <RadioButton
+                        <RenderedButton
                             key={inputId}
                             name={name}
                             value={key}
@@ -32,7 +34,6 @@ const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}
                             isActive={isActive}
                             setActive={setActiveButton}
                             id={inputId}
-                            customRadioButton={crb}
                         />
                     )
                 })

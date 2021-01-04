@@ -9,6 +9,7 @@ import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
 import { colorRadioButton } from './RadioButtonGroup/ColorIcon/ColorIcon'
 import { iconRadioButton } from './RadioButtonGroup/ColorIcon/IconRadioButton'
+import ColorRadioButton from './RadioButtonGroup/ColorIcon/ColorRadioButton'
 
 export default function CardCustomization() {
     const [user, setUser] = React.useState<string>('')
@@ -107,7 +108,7 @@ export default function CardCustomization() {
                 label="Select a color for your card."
                 values={cardColorOptions}
                 onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
-                customRadioButton={colorRadioButton}
+                customButton={<ColorRadioButton bg={}/>}
               />     
               <RadioButtonGroup<CardIconState>
                 name="cardIcon"
