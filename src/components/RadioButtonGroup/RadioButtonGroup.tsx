@@ -22,6 +22,7 @@ const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}
                     const { key, value } = v
                     const inputId = `${name}-radio--${key}`
                     const isActive = inputId === activeButton
+                    const crb = typeof customRadioButton === 'function' ? customRadioButton(isActive, value) : customRadioButton
                     return(
                         <RadioButton
                             key={inputId}
@@ -30,9 +31,8 @@ const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}
                             onChange={onChange}
                             isActive={isActive}
                             setActive={setActiveButton}
-                            activeClassName="text-green-500"
                             id={inputId}
-                            customStyles={typeof customRadioButton === 'function' ? customRadioButton(isActive, value) : customRadioButton}
+                            customRadioButton={crb}
                         />
                     )
                 })

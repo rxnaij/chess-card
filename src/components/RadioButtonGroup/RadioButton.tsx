@@ -16,23 +16,23 @@ type RadioButtonProps<T> = {
     setActive: (id: string) => void,
     activeClassName?: string | undefined,
 
-    customStyles?: CustomRadio | ( () => CustomRadio ),
+    customRadioButton?: CustomRadio | ( (isActive: boolean, value: any) => CustomRadio ),
 
     id: string,
     className?: string
 }
 
 const RadioButton = <T,>(
-    { name, value, onChange, isActive, setActive, activeClassName, customStyles, id, className }: RadioButtonProps<T>
+    { name, value, onChange, isActive, setActive, activeClassName, customRadioButton, id, className }: RadioButtonProps<T>
 ) => {
-    const custom = typeof customStyles === 'function' ? customStyles() : customStyles
+    const custom = typeof customRadioButton === 'function' 
+    ? customRadioButton(isActive, value) 
+    : customRadioButton
 
     return (
         <label 
             htmlFor={id}
-            onClick={() => {
-                setActive(id)
-            }}
+            onClick={() => setActive(id)}
             className={classNames(
                 className,
                 isActive && activeClassName,
@@ -42,7 +42,6 @@ const RadioButton = <T,>(
         >
             <input
                 type="radio"
-                checked={isActive}
                 name={name}
                 value={value}
                 onChange={e => onChange(e.currentTarget.value)}

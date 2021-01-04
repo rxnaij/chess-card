@@ -8,6 +8,7 @@ import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
 import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
 import { colorRadioButton } from './RadioButtonGroup/ColorIcon/ColorIcon'
+import { iconRadioButton } from './RadioButtonGroup/ColorIcon/IconRadioButton'
 
 export default function CardCustomization() {
     const [user, setUser] = React.useState<string>('')
@@ -18,6 +19,7 @@ export default function CardCustomization() {
     const [usersearchErrorMessage, setUsersearchErrorMessage] = React.useState<string>('')
     const [usersearchErrorMessageIsActive, setUsersearchErrorMessageIsActive] = React.useState<boolean>(false)
 
+    const [test, setTest] = React.useState<number>(0)
     const cardColorOptions: RadioValue<CardColorState>[] = [
       {
         key: 'white',
@@ -50,20 +52,6 @@ export default function CardCustomization() {
         value: clockIcon
       }
     ]
-    // const colorIcon = {
-    //   className: classNames(
-    //     'border-2 border-gray-100 hover:border-brand-red hover:shadow-lg cursor-pointer',
-    //     isActive && 'border-brand-red',
-    //     className ? className : '',
-    //   ),
-    //   style: {
-    //       display: 'inline-block',
-    //       width: '50px',
-    //       height: '50px',
-    //       borderRadius: '50%',
-    //       background: mainColor(value)
-    //   }
-    // }
 
     /**
      * @param username username of user
@@ -126,6 +114,7 @@ export default function CardCustomization() {
                 label="Select an icon for your card."
                 values={cardIconOptions}
                 onChange={(v: HTMLInputValue) => setCardIcon(cardIconOptions.find(i => i.key === v)!.value)}
+                customRadioButton={iconRadioButton}
               />      
             </fieldset>
           </form>
