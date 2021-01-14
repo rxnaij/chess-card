@@ -3,11 +3,11 @@ import classNames from 'classnames'
 import {CustomRadio } from '../types'
 
 export type HTMLInputValue = string | number | readonly string[] | undefined
-export interface RadioValue<T> {
+export type RadioValue<T> = {
     key: HTMLInputValue,
     value: T
 }
-type RadioButtonProps<T> = {
+type RadioButtonProps = {
     name: string,
     value: HTMLInputValue,
     onChange: (value: HTMLInputValue) => void,
@@ -22,12 +22,12 @@ type RadioButtonProps<T> = {
     className?: string
 }
 
-const RadioButton = <T,>(
-    { name, value, onChange, isActive, setActive, activeClassName, customRadioButton, id, className }: RadioButtonProps<T>
+const RadioButton = (
+    { name, value, onChange, isActive, setActive, activeClassName, customRadioButton, id, className }: RadioButtonProps
 ) => {
     const custom = typeof customRadioButton === 'function' 
-    ? customRadioButton(isActive, value) 
-    : customRadioButton
+        ? customRadioButton(isActive, value) 
+        : customRadioButton
 
     return (
         <label 

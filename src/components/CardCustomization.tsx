@@ -1,6 +1,6 @@
 import React from 'react'
 import { LichessRating, CardColorState, CardIconState }  from './types'
-import Canvas from './Canvas/canvas'
+import Card from './Canvas/canvas'
 import Button from './TextInput/Button'
 import TextInput from './TextInput/TextInput'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
@@ -9,6 +9,40 @@ import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
 import { colorRadioButton } from './RadioButtonGroup/ColorIcon/ColorIcon'
 import { iconRadioButton } from './RadioButtonGroup/ColorIcon/IconRadioButton'
+
+const cardColorOptions: RadioValue<CardColorState>[] = [
+  {
+    key: 'white',
+    value: '#EFEFEF'
+  },
+  {
+    key: 'black',
+    value: '#212121'
+  },
+  {
+    key: 'black-white',
+    value: ['#212121', '#EFEFEF']
+  },
+  {
+    key: 'white-black',
+    value: ['#EFEFEF', '#212121']
+  }
+]
+
+const cardIconOptions: RadioValue<CardIconState>[] = [
+  {
+    key: 'knight',
+    value: knightIcon
+  },
+  {
+    key: 'bishop',
+    value: ''
+  },
+  {
+    key: 'clock',
+    value: clockIcon
+  }
+]
 
 export default function CardCustomization() {
     const [user, setUser] = React.useState<string>('')
@@ -19,40 +53,6 @@ export default function CardCustomization() {
     const [usersearchErrorMessage, setUsersearchErrorMessage] = React.useState<string>('')
     const [usersearchErrorMessageIsActive, setUsersearchErrorMessageIsActive] = React.useState<boolean>(false)
 
-    const [test, setTest] = React.useState<number>(0)
-    const cardColorOptions: RadioValue<CardColorState>[] = [
-      {
-        key: 'white',
-        value: '#EFEFEF'
-      },
-      {
-        key: 'black',
-        value: '#212121'
-      },
-      {
-        key: 'black-white',
-        value: ['#212121', '#EFEFEF']
-      },
-      {
-        key: 'white-black',
-        value: ['#EFEFEF', '#212121']
-      }
-    ]
-    const cardIconOptions = [
-      {
-        key: 'knight',
-        value: knightIcon
-      },
-      {
-        key: 'bishop',
-        value: ''
-      },
-      {
-        key: 'clock',
-        value: clockIcon
-      }
-    ]
-
     /**
      * @param username username of user
      */
@@ -62,6 +62,7 @@ export default function CardCustomization() {
         const response = await fetch(url)
 
         if (response.status === 200) {
+          // Deactivate error message
           if (usersearchErrorMessageIsActive) setUsersearchErrorMessageIsActive(false)
 
           const ratings = await response.json() as Array<LichessRating>
@@ -75,7 +76,7 @@ export default function CardCustomization() {
           console.log(rapidRatings)
           setRatings(rapidRatings)
         } else {
-          if (response.status === 404) {
+          if (response.status >= 400 && response.status < 500) {
             setUsersearchErrorMessage(`We couldn't find a user with that name. Please check your spelling and try again.`)
             setUsersearchErrorMessageIsActive(true)
           } else if (response.status >= 500) {
@@ -89,7 +90,7 @@ export default function CardCustomization() {
     return (
         <div className="grid grid-cols-2">
           <form action="">
-            <fieldset className="space-y-6">
+            <fieldset className="space-y-10">
               <fieldset className="">
                 <TextInput
                   name="username" 
@@ -118,20 +119,13 @@ export default function CardCustomization() {
               />      
             </fieldset>
           </form>
-          <div className="flex flex-col align-center">
-            <div className="flex justify-center">
-              <Canvas 
-                username={user}
-                ratings={ratings}
-                color={cardColor}
-                icon={cardIcon}
-              />
-            </div>
-            <div className="flex flex-row justify-center mt-8">
-              <Button className="mr-4">Download card</Button>
-              <Button>Instagram story...</Button>
-            </div>
-          </div>
+
+          <Card 
+            username={user}
+            ratings={ratings}
+            color={cardColor}
+            icon={cardIcon}
+          />
         </div>
     )
 }
