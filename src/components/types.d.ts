@@ -2,8 +2,8 @@ export type LichessRating = {
     name: string,
     points: Array<number[]>
 }
-export type CardColorState = string | [string, string]  // TODO: specify valid color values
-export type CardIconState = string // TODO: haven't decided the icon choices
+declare type CardColorState = string | [string, string]  // TODO: specify valid color values
+declare type CardIconState = string // TODO: haven't decided the icon choices
 
 export type CustomRadioButton<T> = (
     isActive: boolean,
