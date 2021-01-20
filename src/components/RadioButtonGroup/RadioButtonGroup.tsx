@@ -11,14 +11,14 @@ interface RadioButtonGroupProps<Value> {
 }
 
 const RadioButtonGroup = <T,>({name, label, values, onChange, customRadioButton}: RadioButtonGroupProps<T>) => {
-    const [activeButton, setActiveButton] = React.useState<HTMLInputValue>('')
+    const [activeButton, setActiveButton] = React.useState<HTMLInputValue>(`${name}-radio--${values[0].key}`)   // sets the first value in the values array as active by default
     return(
         <fieldset id={`${name}-form`} name={name}>
-            <legend className="block mb-2 text-lg">
+            <legend className="block mb-2">
                 {label}
             </legend>
             {
-                values.map(v => {
+                values.map((v, i) => {
                     const { key, value } = v
                     const inputId = `${name}-radio--${key}`
                     const isActive = inputId === activeButton

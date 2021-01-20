@@ -1,15 +1,20 @@
 import React from 'react'
 import { LichessRating, CardColorState, CardIconState }  from './types'
-import Card from './Canvas/canvas'
+
+import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
 import TextInput from './TextInput/TextInput'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
 import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
+
 import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
-import { colorRadioButton } from './RadioButtonGroup/ColorIcon/ColorIcon'
-import { iconRadioButton } from './RadioButtonGroup/ColorIcon/IconRadioButton'
 
+import { colorRadioButton } from './RadioButtonGroup/customRadioButtons/colorRadioButton'
+import { iconRadioButton } from './RadioButtonGroup/customRadioButtons/iconRadioButton'
+import { backgroundColorRadioButton } from './RadioButtonGroup/customRadioButtons/backgroundColorRadioButton'
+
+// Card customization options
 const cardColorOptions: RadioValue<CardColorState>[] = [
   {
     key: 'white',
@@ -59,17 +64,20 @@ const backgroundColorValues: RadioValue<CardColorState>[] = [
   }
 ]
 
+// Main card customization component
 export default function CardCustomization() {
-    const [user, setUser] = React.useState<string>('your_username')
+    const [user, setUser] = React.useState('')
     const [ratings, setRatings] = React.useState<LichessRating[]>([])
-    const [cardColor, setCardColor] = React.useState<CardColorState>('#212121')
-    const [cardIcon, setCardIcon] = React.useState<CardIconState>('')
-    const [bg, setBg] = React.useState<CardColorState>("#212121")
+
+    const [cardColor, setCardColor] = React.useState<CardColorState>(cardColorOptions[0].value)
+    const [cardIcon, setCardIcon] = React.useState<CardIconState>(cardIconOptions[0].value)
+    const [bg, setBg] = React.useState<CardColorState>(backgroundColorValues[0].value)
 
     const [usersearchErrorMessage, setUsersearchErrorMessage] = React.useState<string>('')
     const [usersearchErrorMessageIsActive, setUsersearchErrorMessageIsActive] = React.useState<boolean>(false)
 
     /**
+     * Fetches user's rating data on Lichess
      * @param username username of user
      */
     const getRatingData = async (username: string) => {
@@ -104,7 +112,7 @@ export default function CardCustomization() {
     }
 
     return (
-        <div className="container mx-auto grid grid-cols-2">
+        <div className="grid grid-cols-2">
           <form action="">
             <fieldset className="space-y-10">
               <fieldset className="">
@@ -121,28 +129,28 @@ export default function CardCustomization() {
               {usersearchErrorMessageIsActive && <span className="pt-5">{usersearchErrorMessage}</span>}
               <RadioButtonGroup<CardColorState>
                 name="cardColor"
-                label="Select a color for your card."
+                label="Pick a color."
                 values={cardColorOptions}
                 onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
                 customRadioButton={colorRadioButton}
               />     
               <RadioButtonGroup<CardIconState>
                 name="cardIcon"
-                label="Select an icon for your card."
+                label="Pick an icon."
                 values={cardIconOptions}
                 onChange={(v: HTMLInputValue) => setCardIcon(cardIconOptions.find(i => i.key === v)!.value)}
                 customRadioButton={iconRadioButton}
               />
               <RadioButtonGroup<CardColorState>
                 name="cardBackgroundColor"
-                label="Select a background color."
+                label="Pick a background color."
                 values={backgroundColorValues}
                 onChange={(v: HTMLInputValue) => setBg(backgroundColorValues.find(c => c.key === v)!.value)}
-                customRadioButton={colorRadioButton}
+                customRadioButton={backgroundColorRadioButton}
               /> 
             </fieldset>
           </form>
-          <Card 
+          <Canvas 
             username={user}
             ratings={ratings}
             color={cardColor}

@@ -12,16 +12,18 @@ import AboutPage from './AboutPage';
 
 const Routes = () => (  
     <Router>
-        <Header />
-        <Switch>
-            <Route exact path="/">
-                <CardCustomization />
-            </Route>
-            <Route path="/about">
-                <AboutPage />
-            </Route>
-        </Switch>
-        <Footer />
+        <div className="container mx-auto">
+            <Header />
+            <Switch>
+                <Route exact path="/">
+                    <CardCustomization />
+                </Route>
+                <Route path="/about">
+                    <AboutPage />
+                </Route>
+            </Switch>
+            <Footer />
+        </div>
     </Router>
 );
 

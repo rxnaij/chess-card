@@ -7,7 +7,7 @@ interface FooterProps {
 }
 
 const Footer = ({className}: FooterProps) => (
-    <div className="container mx-auto relative bottom-0">
+    <div className="relative bottom-0">
         <div className={classNames(
             "text-sm text-white flex flex-row py-8",
             className

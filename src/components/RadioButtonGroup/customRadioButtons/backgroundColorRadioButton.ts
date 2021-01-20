@@ -1,11 +1,11 @@
 import classNames from 'classnames'
 import { CardColorState, CustomRadio } from '../../types'
 
-const colorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio => {
+const backgroundColorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio => {
     const mainColor = (v: CardColorState) => {
         if (!v) return '#212121'
         if (v instanceof Array) {
-            return `linear-gradient(to top, ${v[0]} 50%, ${v[1]} 50%)`
+            return `linear-gradient(-242.5deg, ${v[0]} 0%, ${v[1]} 100%)`
         } else {
             return v
         }
@@ -13,8 +13,8 @@ const colorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio
 
     return {
         className: classNames(
-            'border-2 border-gray-100 hover:border-brand-red hover:shadow-lg cursor-pointer mr-2',
-            isActive && 'border-brand-red',
+            'hover:shadow-lg cursor-pointer mr-2',
+            isActive && 'border-2 border-brand-red',
         ),
         style: {
             display: 'inline-block',
@@ -26,4 +26,4 @@ const colorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio
     }
 }
 
-export { colorRadioButton }
+export { backgroundColorRadioButton }

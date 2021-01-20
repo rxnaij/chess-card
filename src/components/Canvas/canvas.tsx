@@ -5,13 +5,19 @@ import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
 import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
 import { LichessRating, CardColorState, CardIconState } from '../types'
+import { createDocumentRegistry } from 'typescript'
 
 interface BackgroundProps {
     width: number,
     height: number,
     color: CardColorState,
 }
+
 const Background = ({ width, height, color }: BackgroundProps) => {
+    const challengeTextRef = React.useRef<Konva.Text>(null!)
+    const [textOffset] = useCenteredOffsetX(width, challengeTextRef)
+    const [,setFontIsLoaded] = React.useState(false)
+
     const getFillProps = (v: CardColorState) => {
         if (!v) return { fill: '#212121' }
         if (v instanceof Array) {
@@ -31,6 +37,16 @@ const Background = ({ width, height, color }: BackgroundProps) => {
         }
     }
 
+    // Checks to see that Overpass font has been loaded
+    React.useEffect(() => {
+        const isLoaded = document.fonts.check("16px Overpass")
+        if (!isLoaded) {
+            setTimeout(() => {
+                setFontIsLoaded(true)
+            }, 0);
+        }
+    }, [])
+
     return (
         <Layer>
             <Rect
@@ -38,7 +54,18 @@ const Background = ({ width, height, color }: BackgroundProps) => {
                 y={0}
                 width={width}
                 height={height}
+                cornerRadius={10}
                 {...getFillProps(color)}
+            />
+            <Text
+                ref={challengeTextRef}
+                offsetX={textOffset}
+                x={width / 2}
+                y={560}
+                text="Challenge me on lichess.org!"
+                fontSize={16}
+                fill={"white"}
+                fontFamily="Overpass"
             />
         </Layer>
     )
@@ -50,6 +77,7 @@ type CardIconProps = {
     y: number,
     icon: string,
 }
+
 const CardIcon = ({ x, y, icon }: CardIconProps) => {
     const [image] = useImage(icon)
     const iconRef = React.useRef<Konva.Image>(null!)
@@ -84,6 +112,7 @@ type CardRatingTextProps = {
 }
 
 const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
+    const [, setFontIsLoaded] = React.useState(false)
     const ratingTextRef = React.useRef<Konva.Group>(null!)
     const [offset] = useCenteredOffsetX<typeof ratings>(ratings, ratingTextRef)
     const textProps = {
@@ -92,6 +121,16 @@ const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
         fill,
         y
     }
+
+    // Checks to see that lichess font has been loaded
+    React.useEffect(() => {
+        const isLoaded = document.fonts.check("16px lichess")
+        if (!isLoaded) {
+            setTimeout(() => {
+                setFontIsLoaded(true)
+            }, 0);
+        }
+    }, [ratings])
 
     return (
         <Group
@@ -121,24 +160,32 @@ type CardProps = {
     icon?: CardIconState | undefined,
 }
 
-function Card({ username = "Your username", ratings, color, icon = '' }: CardProps) {
+type CardLocation = {
+    x: number,
+    y: number
+}
+
+function Card({ username = "Your username", ratings, color, icon = '', x, y }: CardProps & CardLocation) {
     const layerRef = React.useRef<Konva.Layer>(null!)
     const usernameRef = React.useRef<Konva.Text>(null!)
     const [usernameOffset, setUsernameOffset] = React.useState<number>(0)
     const CARD_WIDTH = 320
     const background = color instanceof Array ? color[0] : color
     const foreground = color instanceof Array ? color[1] : color
+    const [, setFontIsLoaded] = React.useState(false)
 
     // Center-offsets username text
     React.useEffect(() => {
         setUsernameOffset(usernameRef.current ? usernameRef.current.getClientRect().width / 2 : 0)
     }, [username])
 
+    // Check to see that username font has been loaded
+
     return (
         <Layer
             offset={{ x: CARD_WIDTH / 2, y: CARD_WIDTH / 2 }}
-            x={375 / 2}
-            y={667 / 2}
+            x={x}
+            y={y}
             width={CARD_WIDTH}
             height={CARD_WIDTH}
             ref={layerRef}
@@ -152,7 +199,7 @@ function Card({ username = "Your username", ratings, color, icon = '' }: CardPro
                     fill={background}
                     cornerRadius={16}
                     shadowBlur={24}
-                    shadowOpacity={0.5}
+                    shadowOpacity={0.25}
                 />
                 <CardIcon
                     x={CARD_WIDTH / 2}
@@ -180,7 +227,7 @@ function Card({ username = "Your username", ratings, color, icon = '' }: CardPro
                         y={240}
                         fill={foreground === "#EFEFEF" ? "#212121" : "#EFEFEF"}
                         align="center"
-                        offsetX={usernameOffset}  // sets origin point to center of element to allow for horizontal centering
+                        offsetX={usernameOffset}
                         fontSize={24}
                     />
                     <CardRatingText ratings={ratings} x={CARD_WIDTH / 2} y={280} fill={foreground === "#EFEFEF" ? "#212121" : "#EFEFEF"} />
@@ -190,7 +237,7 @@ function Card({ username = "Your username", ratings, color, icon = '' }: CardPro
     )
 }
 
-// function from https://stackoverflow.com/a/15832662/512042
+// Download handler function from https://stackoverflow.com/a/15832662/512042
 function downloadURI(uri: string, name: string) {
     var link = document.createElement('a');
     link.download = name;
@@ -200,9 +247,12 @@ function downloadURI(uri: string, name: string) {
     document.body.removeChild(link);
 }
 
+// Main canvas component
 export default function Canvas (props: CardProps & { bg: CardColorState }) {
     const [modalIsActive, setModalIsActive] = React.useState(false)
     const stageRef = React.useRef<Konva.Stage>(null!)
+    const CANVAS_WIDTH = 375
+    const CANVAS_HEIGHT = 667
 
     // download canvas as image
     const handleExport = () => {
@@ -214,14 +264,14 @@ export default function Canvas (props: CardProps & { bg: CardColorState }) {
     return (
         <div className="flex-flex-col align-center">
             <div className="flex justify-center">
-                <Stage width={375} height={667} ref={stageRef}>
-                    <Background width={375} height={667} color={props.bg} />
-                    <Card {...props} />
+                <Stage width={CANVAS_WIDTH} height={CANVAS_HEIGHT} ref={stageRef}>
+                    <Background width={CANVAS_WIDTH} height={CANVAS_HEIGHT} color={props.bg} />
+                    <Card {...props} x={CANVAS_WIDTH / 2} y={CANVAS_HEIGHT / 2} />
                 </Stage>
             </div>
             <div className="flex flex-row justify-center mt-8">
-                <Button className="mr-4" onClick={handleExport}>Download card</Button>
-                <Button onClick={() => setModalIsActive(!modalIsActive)}>Instagram story...</Button>
+                <Button className="mr-4" onClick={handleExport}>Download</Button>
+                <Button onClick={() => setModalIsActive(!modalIsActive)}>Share...</Button>
             </div>
         </div>
     )

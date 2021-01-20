@@ -12,6 +12,7 @@ const iconRadioButton = (isActive: boolean, value: CardIconState): CustomRadio =
             width: '50px',
             height: '50px',
             borderRadius: '50%',
+            backgroundImage: value
         }
     }
 }
