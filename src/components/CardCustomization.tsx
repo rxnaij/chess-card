@@ -1,11 +1,13 @@
 import React from 'react'
-import { LichessRating, CardColorState, CardIconState }  from './types'
+import { LichessRating, CardColorState, CardIconState, Rating }  from './types'
+import { Link } from 'react-router-dom'
 
 import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
 import TextInput from './TextInput/TextInput'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
 import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
+import RatingSelector from './RatingSelector/RatingSelector'
 
 import knightIcon from '../assets/icons/icons8-knight-100-2.png'
 import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
@@ -67,7 +69,8 @@ const backgroundColorValues: RadioValue<CardColorState>[] = [
 // Main card customization component
 export default function CardCustomization() {
     const [user, setUser] = React.useState('')
-    const [ratings, setRatings] = React.useState<LichessRating[]>([])
+    const [ratings, setRatings] = React.useState<Rating[]>([])
+    const [ratingsToRender, setRatingsToRender] = React.useState<Rating[]>([])
 
     const [cardColor, setCardColor] = React.useState<CardColorState>(cardColorOptions[0].value)
     const [cardIcon, setCardIcon] = React.useState<CardIconState>(cardIconOptions[0].value)
@@ -86,19 +89,18 @@ export default function CardCustomization() {
         const response = await fetch(url)
 
         if (response.status === 200) {
+          const ratings = await response.json() as Array<LichessRating>
+          // Retrieves up-to-date list of valid ratings from user's rating history
+          const cleanedRatings: Rating[] = ratings.filter((r: LichessRating) =>   // Only include existing ratings
+            r.points.length
+          ).map((r: LichessRating) => ({  // Retrieve most recent entry in ratings
+              ...r,
+              points: r.points[r.points.length - 1][3]
+          }))
+          setRatings(cleanedRatings)
+
           // Deactivate error message
           if (usersearchErrorMessageIsActive) setUsersearchErrorMessageIsActive(false)
-
-          const ratings = await response.json() as Array<LichessRating>
-          // We only want to get bullet, blitz, and rapid ratings (for now)
-          const rapidRatings = ratings.slice(0, 3).map((r: LichessRating) => {
-              return({
-                ...r,
-                points: r.points.slice(r.points.length - 1) // get the most recent rating
-              }) 
-          })
-          console.log(rapidRatings)
-          setRatings(rapidRatings)
         } else {
           if (response.status >= 400 && response.status < 500) {
             setUsersearchErrorMessage(`We couldn't find a user with that name. Please check your spelling and try again.`)
@@ -115,7 +117,10 @@ export default function CardCustomization() {
         <div className="grid grid-cols-2">
           <form action="">
             <fieldset className="space-y-10">
-              <fieldset className="">
+              <Link to="/login">
+                <Button className="ml-4">Log in</Button>
+              </Link>
+              <fieldset>
                 <TextInput
                   name="username" 
                   id="username" 
@@ -127,6 +132,17 @@ export default function CardCustomization() {
                 <Button className="ml-4" onClick={() => getRatingData(user)}>Submit</Button>
               </fieldset>
               {usersearchErrorMessageIsActive && <span className="pt-5">{usersearchErrorMessage}</span>}
+              <RatingSelector 
+                ratings={ratings} 
+                value={ratingsToRender} 
+                onChange={(v: Rating) => {
+                  if (ratingsToRender.includes(v)) {
+                    setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
+                  } else {
+                    setRatingsToRender(prev => prev.concat([v]))
+                  }
+                }} 
+              />
               <RadioButtonGroup<CardColorState>
                 name="cardColor"
                 label="Pick a color."
@@ -152,7 +168,7 @@ export default function CardCustomization() {
           </form>
           <Canvas 
             username={user}
-            ratings={ratings}
+            ratings={ratingsToRender}
             color={cardColor}
             icon={cardIcon}
             bg={bg}

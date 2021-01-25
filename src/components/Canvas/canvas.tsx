@@ -4,8 +4,7 @@ import Button from '../TextInput/Button'
 import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
 import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
-import { LichessRating, CardColorState, CardIconState } from '../types'
-import { createDocumentRegistry } from 'typescript'
+import { Rating, CardColorState, CardIconState } from '../types'
 
 interface BackgroundProps {
     width: number,
@@ -105,7 +104,7 @@ const getRatingIcon = (name: string) => {
 }
 
 type CardRatingTextProps = {
-    ratings: LichessRating[]
+    ratings: Rating[]
     x: number,
     y: number,
     fill: string,
@@ -143,7 +142,7 @@ const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
                     return (
                         <Group key={rating.name} x={newX}>
                             <Text {...textProps} fontFamily="lichess" text={getRatingIcon(rating.name)} />
-                            <Text {...textProps} x={20} text={rating.points[0][3].toString()} />
+                            <Text {...textProps} x={20} text={rating.points.toString()} />
                         </Group>
                     )
                 })
@@ -155,7 +154,7 @@ const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
 // Complete playercard component
 type CardProps = {
     username: string,
-    ratings: LichessRating[],
+    ratings: Rating[],
     color: CardColorState,
     icon?: CardIconState | undefined,
 }
@@ -172,7 +171,6 @@ function Card({ username = "Your username", ratings, color, icon = '', x, y }: C
     const CARD_WIDTH = 320
     const background = color instanceof Array ? color[0] : color
     const foreground = color instanceof Array ? color[1] : color
-    const [, setFontIsLoaded] = React.useState(false)
 
     // Center-offsets username text
     React.useEffect(() => {
@@ -186,8 +184,6 @@ function Card({ username = "Your username", ratings, color, icon = '', x, y }: C
             offset={{ x: CARD_WIDTH / 2, y: CARD_WIDTH / 2 }}
             x={x}
             y={y}
-            width={CARD_WIDTH}
-            height={CARD_WIDTH}
             ref={layerRef}
         >
             <Group>

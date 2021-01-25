@@ -9,6 +9,7 @@ import Header from "./Header/Header";
 import Footer from './Footer/Footer';
 import CardCustomization from './CardCustomization';
 import AboutPage from './AboutPage';
+import LoginPage from './LoginPage';
 
 const Routes = () => (  
     <Router>
@@ -18,8 +19,11 @@ const Routes = () => (
                 <Route exact path="/">
                     <CardCustomization />
                 </Route>
-                <Route path="/about">
+                <Route exact path="/about">
                     <AboutPage />
+                </Route>
+                <Route exact path="/login">
+                    <LoginPage />
                 </Route>
             </Switch>
             <Footer />
