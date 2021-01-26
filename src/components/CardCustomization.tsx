@@ -1,10 +1,9 @@
 import React from 'react'
-import { LichessRating, CardColorState, CardIconState, Rating }  from './types'
+import { CardColorState, CardIconState, Rating }  from './types'
 import { Link } from 'react-router-dom'
 
 import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
-import TextInput from './TextInput/TextInput'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
 import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
 import RatingSelector from './RatingSelector/RatingSelector'
@@ -68,6 +67,7 @@ const backgroundColorValues: RadioValue<CardColorState>[] = [
 
 // Main card customization component
 export default function CardCustomization() {
+    const [accessToken, setAccessToken] = React.useState<string | null>(null)
     const [user, setUser] = React.useState('')
     const [ratings, setRatings] = React.useState<Rating[]>([])
     const [ratingsToRender, setRatingsToRender] = React.useState<Rating[]>([])
@@ -76,77 +76,70 @@ export default function CardCustomization() {
     const [cardIcon, setCardIcon] = React.useState<CardIconState>(cardIconOptions[0].value)
     const [bg, setBg] = React.useState<CardColorState>(backgroundColorValues[0].value)
 
-    const [usersearchErrorMessage, setUsersearchErrorMessage] = React.useState<string>('')
-    const [usersearchErrorMessageIsActive, setUsersearchErrorMessageIsActive] = React.useState<boolean>(false)
-
+    // Resets ratings selector when not logged in
     React.useEffect(() => {
       setRatingsToRender([])
     }, [ratings])
 
-    /**
-     * Fetches user's rating data on Lichess
-     * @param username username of user
-     */
-    const getRatingData = async (username: string) => {
-        // Make the API request
-        const url = `https://lichess.org/api/user/${username}/rating-history`
-        const response = await fetch(url)
+    // Retrieve data when logged in
+    React.useEffect(() => {
+      // Check for access token
+      const token = new URLSearchParams(window.location.search).get('access-token') || null
+      setAccessToken(token)
 
-        if (response.status === 200) {
-          const ratings = await response.json() as Array<LichessRating>
-          // Retrieves up-to-date list of valid ratings from user's rating history
-          const cleanedRatings: Rating[] = ratings.filter((r: LichessRating) =>   // Only include existing ratings
-            r.points.length
-          ).map((r: LichessRating) => ({  // Retrieve most recent entry in ratings
-              ...r,
-              points: r.points[r.points.length - 1][3]
-          }))
-          setRatings(cleanedRatings)
-
-          // Deactivate error message
-          if (usersearchErrorMessageIsActive) setUsersearchErrorMessageIsActive(false)
-        } else {
-          if (response.status >= 400 && response.status < 500) {
-            setUsersearchErrorMessage(`We couldn't find a user with that name. Please check your spelling and try again.`)
-            setUsersearchErrorMessageIsActive(true)
-          } else if (response.status >= 500) {
-            setUsersearchErrorMessage(`There was a problem connecting to Lichess's servers. Please wait and try again.`)
-            setUsersearchErrorMessageIsActive(true)
+      // Retrieve account data
+      async function fetchData() {
+        const user = await fetch('https://lichess.org/api/account', {
+          headers: {
+              'Authorization': `Bearer ${token}`
           }
-          console.log(`Error: user not found: ${username}`)
-        }    
-    }
+        }).then(res => res.json())
+        const { username, perfs } = user
+        const newRatings: Rating[] = Object.getOwnPropertyNames(perfs)
+          .filter(p => perfs[p].games > 0)
+          .map((p: string) => ({
+            name: p,
+            points: perfs[p].rating
+          }))
+        setUser(username)
+        setRatings(newRatings)
+      }
+      if (accessToken) fetchData()
+    }, [accessToken])
 
     return (
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-2 space-y-4">
+          <div className="col-span-2 flex justify-between">
+            {
+              accessToken
+              ? <> 
+                  <h3 className="text-2xl font-bold">Customizing {user}'s chess card!</h3>
+                  <a href="http://localhost:3000">
+                    <Button className="ml-4" onClick={() => {
+                      setAccessToken(null)
+                    }}>Log out</Button>
+                  </a>
+                </>
+              : <a href="http://localhost:8000">
+                  <Button className="ml-4">Log in</Button>
+                </a>
+            }
+          </div>
           <form action="">
             <fieldset className="space-y-10">
-              <Link to="/login">
-                <Button className="ml-4">Log in</Button>
-              </Link>
-              <fieldset>
-                <TextInput
-                  name="username" 
-                  id="username" 
-                  placeholder="Username" 
-                  label="Enter your lichess.org username" 
-                  value={user} 
-                  onChange={ e => setUser(e.target.value) } 
+              {
+                ratings.length > 0 && <RatingSelector 
+                  ratings={ratings} 
+                  value={ratingsToRender} 
+                  onChange={(v: Rating) => {
+                    if (ratingsToRender.includes(v)) {
+                      setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
+                    } else {
+                      setRatingsToRender(prev => prev.concat([v]))
+                    }
+                  }} 
                 />
-                <Button className="ml-4" onClick={() => getRatingData(user)}>Submit</Button>
-              </fieldset>
-              {usersearchErrorMessageIsActive && <span className="pt-5">{usersearchErrorMessage}</span>}
-              <RatingSelector 
-                ratings={ratings} 
-                value={ratingsToRender} 
-                onChange={(v: Rating) => {
-                  if (ratingsToRender.includes(v)) {
-                    setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
-                  } else {
-                    setRatingsToRender(prev => prev.concat([v]))
-                  }
-                }} 
-              />
+              }
               <RadioButtonGroup<CardColorState>
                 name="cardColor"
                 label="Pick a color."

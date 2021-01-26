@@ -1,9 +1,3 @@
-export type LichessRating = {
-    name: string,
-    points: [
-        number[]
-    ]
-}
 export type Rating = {
     name: string,
     points: number
