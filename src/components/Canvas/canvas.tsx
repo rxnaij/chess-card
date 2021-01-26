@@ -5,6 +5,7 @@ import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
 import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
 import { Rating, CardColorState, CardIconState } from '../types'
+import { getLichessIconChar } from './getLichessIconChar'
 
 interface BackgroundProps {
     width: number,
@@ -86,22 +87,6 @@ const CardIcon = ({ x, y, icon }: CardIconProps) => {
 }
 
 // Player rating information
-/**
- * Returns the coresponding icon for a given time control/game type.
- * The returned icon should be rendered in the Lichess font.
- * @param name the name of the time control
- */
-const getRatingIcon = (name: string) => {
-    const check = name.toLowerCase()
-    switch (check) {
-        case 'bullet':
-            return 'T'
-        case 'blitz':
-            return ')'
-        case 'rapid':
-            return '#'
-    }
-}
 
 type CardRatingTextProps = {
     ratings: Rating[]
@@ -141,7 +126,7 @@ const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
                     const newX = x + (i * 90)   // positioning of ratings
                     return (
                         <Group key={rating.name} x={newX}>
-                            <Text {...textProps} fontFamily="lichess" text={getRatingIcon(rating.name)} />
+                            <Text {...textProps} fontFamily="lichess" text={getLichessIconChar(rating.name)} />
                             <Text {...textProps} x={20} text={rating.points.toString()} />
                         </Group>
                     )

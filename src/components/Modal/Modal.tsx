@@ -2,7 +2,6 @@ import React from 'react'
 import RadioButtonGroup from '../RadioButtonGroup/RadioButtonGroup'
 import { HTMLInputValue } from '../RadioButtonGroup/RadioButton'
 import { CardColorState } from '../types'
-import IGStory from '../Canvas/IGStory'
 import Konva from 'konva'
 import { Stage } from 'react-konva'
 
@@ -63,7 +62,6 @@ const Modal = ({exit, action, canvas}: ModalProps) => {
                                     </div>
                                     <div>
                                         <Stage ref={storyRef} width={375} height={667}>
-                                            <IGStory width={375} height={667} color='#212121' />
                                             {/* { canvas } */}
                                         </Stage>
                                     </div>

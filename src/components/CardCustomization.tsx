@@ -79,6 +79,10 @@ export default function CardCustomization() {
     const [usersearchErrorMessage, setUsersearchErrorMessage] = React.useState<string>('')
     const [usersearchErrorMessageIsActive, setUsersearchErrorMessageIsActive] = React.useState<boolean>(false)
 
+    React.useEffect(() => {
+      setRatingsToRender([])
+    }, [ratings])
+
     /**
      * Fetches user's rating data on Lichess
      * @param username username of user
