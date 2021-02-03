@@ -2,9 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 export const Header = () => (
-    <div className="mb-8">
-        <h1 className="text-3xl font-black mb-4 mr-8 inline-block"><Link to="/">Chess Cyber-Card</Link></h1>
-        <p className="font-regular text-opacity-80 inline-block">Create a neat playercard for your Lichess account that you can share on social media.</p>
+    <div className="mb-8 bg-gray-800 min-w-full py-6 shadow-md">
+        <div className="container mx-auto">
+            <h1 className="text-2xl font-black mr-8 inline-block hover:text-opacity-80"><Link to="/">Chess Cyber-Card</Link></h1>
+            <p className="font-light text-opacity-70 inline-block">Create a neat playercard for your Lichess account that you can share on social media.</p>
+        </div>
     </div>
 )
 

@@ -4,7 +4,7 @@ import { CardIconState, CustomRadio } from '../../types'
 const iconRadioButton = (isActive: boolean, value: CardIconState): CustomRadio => {
     return {
         className: classNames(
-            "bg-black border-2 border-gray-100 hover:border-brand-red hover:shadow-lg cursor-pointer mr-2",
+            "bg-black border-2 border-gray-100 hover:border-brand-red hover:shadow-lg cursor-pointer mr-3",
             isActive && 'border-brand-red'
         ),
         style: {

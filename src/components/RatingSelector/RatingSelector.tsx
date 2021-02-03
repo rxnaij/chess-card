@@ -9,8 +9,8 @@ interface RatingSelectorProps {
 
 function RatingSelector({ratings, value, onChange} : RatingSelectorProps) {
     return (
-        <fieldset className="flex flex-row items-center flex-wrap space-y-2">
-            <legend>Pick up to three ratings to show on your card.</legend>
+        <fieldset className="flex flex-row items-center flex-wrap space-x-2 space-y-2">
+            <legend>Pick up to three ratings to show on your card. ({value.length}/3 selected)</legend>
             {
                 ratings.map((rating: Rating) => {
                     const { name } = rating
@@ -22,7 +22,7 @@ function RatingSelector({ratings, value, onChange} : RatingSelectorProps) {
                         <RatingCheckbox
                             key={id}
                             id={id}
-                            className="mr-1"
+                            className=""
                             name={name}
                             value={name}
                             onChange={() => onChange(rating)}
@@ -51,15 +51,16 @@ interface RatingCheckboxProps {
 
 function RatingCheckbox({id, className, value, onChange, name, checked, disabled, label}: RatingCheckboxProps) {
     const labelClasses = classNames(
-        "mr-8 p-4 rounded-sm",
+        "mr-8 p-4 rounded-md bg-opacity-80",
         !disabled && 'hover:bg-green-300 cursor-pointer',
         disabled && 'text-gray-400',
         checked && 'bg-green-600',
         className
     )
     const inputClasses = classNames(
-        `insivible mr-2 p-4`
+        `hidden`
     )
+    const icon = checked ? '–' : '+'
 
     return(
         <label
@@ -72,10 +73,12 @@ function RatingCheckbox({id, className, value, onChange, name, checked, disabled
                 id={id}
                 className={inputClasses}
                 value={value}
+                onChange={onChange}
                 name={name}
-                checked={checked}
+                checked={!!checked}
                 disabled={disabled}
             />
+            <span className="font-bold text-white text-opacity-80 text-xl mr-2">{icon}</span>
             <span>{label}</span>
         </label>
     )

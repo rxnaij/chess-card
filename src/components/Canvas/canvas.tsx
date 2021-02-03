@@ -6,6 +6,7 @@ import useImage from 'use-image'
 import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
 import { Rating, CardColorState, CardIconState } from '../types'
 import { getLichessIconChar } from './getLichessIconChar'
+import { useLoginCtx } from '../../state/LoginContext'
 
 interface BackgroundProps {
     width: number,
@@ -123,9 +124,10 @@ const CardRatingText = ({ ratings, x, y, fill }: CardRatingTextProps) => {
         >
             {
                 ratings.map((rating, i) => {
+                    const key = `rating-text--${rating.name}`
                     const newX = x + (i * 90)   // positioning of ratings
                     return (
-                        <Group key={rating.name} x={newX}>
+                        <Group key={key} x={newX}>
                             <Text {...textProps} fontFamily="lichess" text={getLichessIconChar(rating.name)} />
                             <Text {...textProps} x={20} text={rating.points.toString()} />
                         </Group>
@@ -149,7 +151,7 @@ type CardLocation = {
     y: number
 }
 
-function Card({ username = "Your username", ratings, color, icon = '', x, y }: CardProps & CardLocation) {
+function Card({ username="Your username", ratings, color, icon = '', x, y }: CardProps & CardLocation) {
     const layerRef = React.useRef<Konva.Layer>(null!)
     const usernameRef = React.useRef<Konva.Text>(null!)
     const [usernameOffset, setUsernameOffset] = React.useState<number>(0)
@@ -231,7 +233,7 @@ function downloadURI(uri: string, name: string) {
 
 // Main canvas component
 export default function Canvas (props: CardProps & { bg: CardColorState }) {
-    const [modalIsActive, setModalIsActive] = React.useState(false)
+    const { accessToken } = useLoginCtx()
     const stageRef = React.useRef<Konva.Stage>(null!)
     const CANVAS_WIDTH = 375
     const CANVAS_HEIGHT = 667
@@ -251,10 +253,12 @@ export default function Canvas (props: CardProps & { bg: CardColorState }) {
                     <Card {...props} x={CANVAS_WIDTH / 2} y={CANVAS_HEIGHT / 2} />
                 </Stage>
             </div>
-            <div className="flex flex-row justify-center mt-8">
-                <Button className="mr-4" onClick={handleExport}>Download</Button>
-                <Button onClick={() => setModalIsActive(!modalIsActive)}>Share...</Button>
-            </div>
+            {
+                accessToken &&
+                <div className="flex flex-row justify-center mt-8">
+                    <Button className="mr-4" onClick={handleExport}>Download</Button>
+                </div>
+            }
         </div>
     )
 }

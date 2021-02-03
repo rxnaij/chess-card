@@ -13,8 +13,8 @@ import LoginPage from './LoginPage';
 
 const Routes = () => (  
     <Router>
+        <Header />
         <div className="container mx-auto">
-            <Header />
             <Switch>
                 <Route exact path="/">
                     <CardCustomization />

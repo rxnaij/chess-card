@@ -1,18 +1,21 @@
+// Business logic and types
 import React from 'react'
 import { CardColorState, CardIconState, Rating }  from './types'
 import { Link } from 'react-router-dom'
 import { useLoginCtx } from '../state/LoginContext'
 import { removeAccessTokenFromUrl } from '../utils/fetchLogin'
 
+// Custom components
 import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
 import RadioButtonGroup from './RadioButtonGroup/RadioButtonGroup'
 import { RadioValue, HTMLInputValue } from './RadioButtonGroup/RadioButton'
 import RatingSelector from './RatingSelector/RatingSelector'
 
-import knightIcon from '../assets/icons/icons8-knight-100-2.png'
-import clockIcon from '../assets/icons/icons8-chess-clock-100.png'
+// Icons
+import { knightIcon, bishopIcon, clockIcon, clockIcon2 } from '../assets/useAsset'
 
+// Radio button styling
 import { colorRadioButton } from './RadioButtonGroup/customRadioButtons/colorRadioButton'
 import { iconRadioButton } from './RadioButtonGroup/customRadioButtons/iconRadioButton'
 import { backgroundColorRadioButton } from './RadioButtonGroup/customRadioButtons/backgroundColorRadioButton'
@@ -44,11 +47,15 @@ const cardIconOptions: RadioValue<CardIconState>[] = [
   },
   {
     key: 'bishop',
-    value: ''
+    value: bishopIcon
   },
   {
     key: 'clock',
     value: clockIcon
+  },
+  {
+    key: 'clock-2',
+    value: clockIcon2
   }
 ]
 
@@ -64,6 +71,10 @@ const backgroundColorValues: RadioValue<CardColorState>[] = [
   {
     key: 'red',
     value: ['#FB66CB', '#FF5A5F']
+  },
+  {
+    key: 'sunset',
+    value: ['#FFF503', '#FB6EB2']
   }
 ]
 
@@ -88,7 +99,7 @@ export default function CardCustomization() {
     React.useEffect(() => {
       // Check for access token
       const token = new URLSearchParams(window.location.search).get('access-token') || null
-      setAccessToken(token)
+      if (!accessToken) setAccessToken(token)
 
       // Retrieve account data
       async function fetchData() {
@@ -110,76 +121,78 @@ export default function CardCustomization() {
       if (accessToken) {
         removeAccessTokenFromUrl()
         fetchData()
+      } else {
+        setUser('')
+        setRatings([])
       }
-      setUser('')
-      setRatings([])
     }, [accessToken, setAccessToken])
 
     return (
         <div className="grid grid-cols-2 space-y-4">
-          <h1 className="text-6xl">Create a Chess Card</h1>
-          <div className="col-span-2 flex justify-between">
-            {
-              accessToken
-              ? <div className="flex justify-between items-center"> 
-                  <div className="mr-4">
-                    <span>You're logged in as {user}.</span>
-                  </div>
-                  <Link to="/">
-                    <Button onClick={() => {
-                      setAccessToken(null)
-                    }}>
-                      Log out
-                    </Button>
-                  </Link>
-                </div>
-              :
-                <div>
-                  <p className="mb-4">Log in using your Lichess account to start personalizing your chess card.</p>
-                  <a href="http://localhost:8000/">
-                    <Button>Log in</Button>
-                  </a>
-                </div>
-            }
-          </div>
-          <form action="">
-            <fieldset className="space-y-10">
+          <div>
+            <div className="">
+              <h1 className="text-6xl mb-4">Create a Chess Card</h1>
               {
-                ratings.length > 0 && <RatingSelector 
-                  ratings={ratings} 
-                  value={ratingsToRender} 
-                  onChange={(v: Rating) => {
-                    if (ratingsToRender.includes(v)) {
-                      setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
-                    } else {
-                      setRatingsToRender(prev => prev.concat([v]))
-                    }
-                  }} 
-                />
+                accessToken
+                ? <div className="flex justify-between items-center mb-12"> 
+                    <div className="mr-4">
+                      <span>You're logged in as {user}.</span>
+                    </div>
+                    <Link to="/">
+                      <Button onClick={() => {
+                        setAccessToken(null)
+                      }}>
+                        Log out
+                      </Button>
+                    </Link>
+                  </div>
+                : <div className="flex justify-between items-center self-stretch mb-12">
+                    <p>Log in using your Lichess account to start personalizing your chess card.</p>
+                    <a href="http://localhost:8000/">
+                      <Button>Log in</Button>
+                    </a>
+                  </div>
               }
-              <RadioButtonGroup<CardColorState>
-                name="cardColor"
-                label="Pick a color."
-                values={cardColorOptions}
-                onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
-                customRadioButton={colorRadioButton}
-              />     
-              <RadioButtonGroup<CardIconState>
-                name="cardIcon"
-                label="Pick an icon."
-                values={cardIconOptions}
-                onChange={(v: HTMLInputValue) => setCardIcon(cardIconOptions.find(i => i.key === v)!.value)}
-                customRadioButton={iconRadioButton}
-              />
-              <RadioButtonGroup<CardColorState>
-                name="cardBackgroundColor"
-                label="Pick a background color."
-                values={backgroundColorValues}
-                onChange={(v: HTMLInputValue) => setBg(backgroundColorValues.find(c => c.key === v)!.value)}
-                customRadioButton={backgroundColorRadioButton}
-              /> 
-            </fieldset>
-          </form>
+              <form action="">
+                <fieldset className="space-y-10">
+                  {
+                    ratings.length > 0 && <RatingSelector 
+                      ratings={ratings} 
+                      value={ratingsToRender} 
+                      onChange={(v: Rating) => {
+                        if (ratingsToRender.includes(v)) {
+                          setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
+                        } else {
+                          setRatingsToRender(prev => prev.concat([v]))
+                        }
+                      }} 
+                    />
+                  }
+                  <RadioButtonGroup<CardColorState>
+                    name="cardColor"
+                    label="Card color"
+                    values={cardColorOptions}
+                    onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
+                    customRadioButton={colorRadioButton}
+                  />     
+                  <RadioButtonGroup<CardIconState>
+                    name="cardIcon"
+                    label="Icon"
+                    values={cardIconOptions}
+                    onChange={(v: HTMLInputValue) => setCardIcon(cardIconOptions.find(i => i.key === v)!.value)}
+                    customRadioButton={iconRadioButton}
+                  />
+                  <RadioButtonGroup<CardColorState>
+                    name="cardBackgroundColor"
+                    label="Background color"
+                    values={backgroundColorValues}
+                    onChange={(v: HTMLInputValue) => setBg(backgroundColorValues.find(c => c.key === v)!.value)}
+                    customRadioButton={backgroundColorRadioButton}
+                  /> 
+                </fieldset>
+              </form>
+            </div>
+          </div>  
           <Canvas 
             username={user}
             ratings={ratingsToRender}

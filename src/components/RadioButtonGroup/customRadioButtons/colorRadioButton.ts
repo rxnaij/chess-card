@@ -13,7 +13,7 @@ const colorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio
 
     return {
         className: classNames(
-            'hover:shadow-lg cursor-pointer mr-2',
+            'hover:shadow-lg cursor-pointer mr-3',
             isActive && 'border-2 border-brand-red',
         ),
         style: {
