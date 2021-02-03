@@ -179,6 +179,7 @@ function Card({ username = "Your username", ratings, color, icon = '', x, y }: C
                     height={CARD_WIDTH}
                     fill={background}
                     cornerRadius={16}
+                    shadowOffsetY={16}
                     shadowBlur={24}
                     shadowOpacity={0.25}
                 />

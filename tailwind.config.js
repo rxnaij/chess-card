@@ -23,6 +23,6 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require('@tailwindcss/typography'),
+    // require('@tailwindcss/custom-forms')
   ],
 }

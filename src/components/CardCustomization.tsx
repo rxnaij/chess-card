@@ -1,6 +1,8 @@
 import React from 'react'
 import { CardColorState, CardIconState, Rating }  from './types'
 import { Link } from 'react-router-dom'
+import { useLoginCtx } from '../state/LoginContext'
+import { removeAccessTokenFromUrl } from '../utils/fetchLogin'
 
 import Canvas from './Canvas/canvas'
 import Button from './TextInput/Button'
@@ -67,7 +69,8 @@ const backgroundColorValues: RadioValue<CardColorState>[] = [
 
 // Main card customization component
 export default function CardCustomization() {
-    const [accessToken, setAccessToken] = React.useState<string | null>(null)
+    const { accessToken, setAccessToken } = useLoginCtx()
+
     const [user, setUser] = React.useState('')
     const [ratings, setRatings] = React.useState<Rating[]>([])
     const [ratingsToRender, setRatingsToRender] = React.useState<Rating[]>([])
@@ -79,7 +82,7 @@ export default function CardCustomization() {
     // Resets ratings selector when not logged in
     React.useEffect(() => {
       setRatingsToRender([])
-    }, [ratings])
+    }, [accessToken])
 
     // Retrieve data when logged in
     React.useEffect(() => {
@@ -104,25 +107,39 @@ export default function CardCustomization() {
         setUser(username)
         setRatings(newRatings)
       }
-      if (accessToken) fetchData()
-    }, [accessToken])
+      if (accessToken) {
+        removeAccessTokenFromUrl()
+        fetchData()
+      }
+      setUser('')
+      setRatings([])
+    }, [accessToken, setAccessToken])
 
     return (
         <div className="grid grid-cols-2 space-y-4">
+          <h1 className="text-6xl">Create a Chess Card</h1>
           <div className="col-span-2 flex justify-between">
             {
               accessToken
-              ? <> 
-                  <h3 className="text-2xl font-bold">Customizing {user}'s chess card!</h3>
-                  <a href="http://localhost:3000">
-                    <Button className="ml-4" onClick={() => {
+              ? <div className="flex justify-between items-center"> 
+                  <div className="mr-4">
+                    <span>You're logged in as {user}.</span>
+                  </div>
+                  <Link to="/">
+                    <Button onClick={() => {
                       setAccessToken(null)
-                    }}>Log out</Button>
+                    }}>
+                      Log out
+                    </Button>
+                  </Link>
+                </div>
+              :
+                <div>
+                  <p className="mb-4">Log in using your Lichess account to start personalizing your chess card.</p>
+                  <a href="http://localhost:8000/">
+                    <Button>Log in</Button>
                   </a>
-                </>
-              : <a href="http://localhost:8000">
-                  <Button className="ml-4">Log in</Button>
-                </a>
+                </div>
             }
           </div>
           <form action="">
