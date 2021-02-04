@@ -16,6 +16,30 @@ module.exports = {
         'brand-green': '#62C370',
         'brand-blue': '#008DD5',
         'brand-background': '#3A3A68',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            h1: {
+              color: '#EFEFEF'
+            },
+            h2: {
+              color: '#EFEFEF'
+            },
+            h3: {
+              color: '#EFEFEF'
+            },
+            p: {
+              color: '#EFEFEF'
+            },
+            a: {
+              color: '#EFEFEF',
+              '&hover': {
+                color: '#008DD5'
+              }
+            }
+          }
+        }
       }
     },
   },
