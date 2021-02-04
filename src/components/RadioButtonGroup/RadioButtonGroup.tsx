@@ -1,6 +1,6 @@
 import * as React from 'react'
 import RadioButton, { RadioValue, HTMLInputValue } from './RadioButton'
-import { CustomRadio } from '../types'
+import { CustomRadio } from '../../types'
 
 interface RadioButtonGroupProps<Value> {
     name: string,

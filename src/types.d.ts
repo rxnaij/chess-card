@@ -18,3 +18,4 @@ export type CustomRadio = {
     className?: string,
     style?: {}
 }
+

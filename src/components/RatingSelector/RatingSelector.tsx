@@ -1,4 +1,4 @@
-import { Rating } from '../types'
+import { Rating } from '../../types'
 import classNames from 'classnames'
 
 interface RatingSelectorProps {
@@ -9,8 +9,8 @@ interface RatingSelectorProps {
 
 function RatingSelector({ratings, value, onChange} : RatingSelectorProps) {
     return (
-        <fieldset className="flex flex-row items-center flex-wrap space-x-2 space-y-2">
-            <legend>Pick up to three ratings to show on your card. ({value.length}/3 selected)</legend>
+        <fieldset className="flex flex-row items-center flex-wrap flex-start space-y-2">
+            <legend>Pick up to three ratings to show on your card. <br />({value.length}/3 selected)</legend>
             {
                 ratings.map((rating: Rating) => {
                     const { name } = rating
@@ -66,7 +66,7 @@ function RatingCheckbox({id, className, value, onChange, name, checked, disabled
         <label
             htmlFor={name}
             className={labelClasses}
-            onClick={onChange}
+            onClick={!disabled ? onChange : () => null}
         >
             <input 
                 type="checkbox"

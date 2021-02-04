@@ -1,12 +1,12 @@
 import classNames from 'classnames'
-import {CustomRadio } from '../types'
+import {CustomRadio } from '../../types'
 
 export type HTMLInputValue = string | number | readonly string[] | undefined
 export type RadioValue<T> = {
     key: HTMLInputValue,
     value: T
 }
-type RadioButtonProps = {
+interface RadioButtonProps {
     name: string,
     value: HTMLInputValue,
     onChange: (value: HTMLInputValue) => void,

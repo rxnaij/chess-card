@@ -1,18 +1,20 @@
 import classNames from 'classnames'
-import { CardIconState, CustomRadio } from '../../types'
+import { CardIconState, CustomRadio } from '../../../types'
 
 const iconRadioButton = (isActive: boolean, value: CardIconState): CustomRadio => {
     return {
         className: classNames(
-            "bg-black border-2 border-gray-100 hover:border-brand-red hover:shadow-lg cursor-pointer mr-3",
-            isActive && 'border-brand-red'
+            "border-2 border-transparent hover:border-brand-green hover:shadow-lg cursor-pointer mr-3",
+            isActive && 'border-brand-green'
         ),
         style: {
             display: 'inline-block',
-            width: '50px',
-            height: '50px',
+            minWidth: '60px',
+            minHeight: '60px',
             borderRadius: '50%',
-            backgroundImage: value
+            background: `url(${value}) no-repeat`,
+            backgroundSize: '50px',
+            backgroundPosition: 'center'
         }
     }
 }

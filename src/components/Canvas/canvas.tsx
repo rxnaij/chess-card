@@ -4,7 +4,7 @@ import Button from '../TextInput/Button'
 import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
 import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
-import { Rating, CardColorState, CardIconState } from '../types'
+import { Rating, CardColorState, CardIconState } from '../../types'
 import { getLichessIconChar } from './getLichessIconChar'
 import { useLoginCtx } from '../../state/LoginContext'
 
@@ -144,6 +144,7 @@ type CardProps = {
     ratings: Rating[],
     color: CardColorState,
     icon?: CardIconState | undefined,
+    textColor: CardColorState
 }
 
 type CardLocation = {
@@ -151,7 +152,7 @@ type CardLocation = {
     y: number
 }
 
-function Card({ username="Your username", ratings, color, icon = '', x, y }: CardProps & CardLocation) {
+function Card({ username="Your username", ratings, color, icon = '', x, y, textColor }: CardProps & CardLocation) {
     const layerRef = React.useRef<Konva.Layer>(null!)
     const usernameRef = React.useRef<Konva.Text>(null!)
     const [usernameOffset, setUsernameOffset] = React.useState<number>(0)
@@ -209,12 +210,12 @@ function Card({ username="Your username", ratings, color, icon = '', x, y }: Car
                         text={username && '@' + username}
                         x={CARD_WIDTH / 2}
                         y={240}
-                        fill={foreground === "#EFEFEF" ? "#212121" : "#EFEFEF"}
+                        fill={textColor instanceof Array ? textColor[0] : textColor}
                         align="center"
                         offsetX={usernameOffset}
                         fontSize={24}
                     />
-                    <CardRatingText ratings={ratings} x={CARD_WIDTH / 2} y={280} fill={foreground === "#EFEFEF" ? "#212121" : "#EFEFEF"} />
+                    <CardRatingText ratings={ratings} x={CARD_WIDTH / 2} y={280} fill={textColor instanceof Array ? textColor[0] : textColor} />
                 </Group>
             </Group>
         </Layer>

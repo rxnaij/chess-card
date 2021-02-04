@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { CardColorState, CustomRadio } from '../../types'
+import { CardColorState, CustomRadio } from '../../../types'
 
 const backgroundColorRadioButton = (isActive: boolean, value: CardColorState): CustomRadio => {
     const mainColor = (v: CardColorState) => {
@@ -13,8 +13,8 @@ const backgroundColorRadioButton = (isActive: boolean, value: CardColorState): C
 
     return {
         className: classNames(
-            'hover:shadow-lg cursor-pointer mr-3',
-            isActive && 'border-2 border-brand-red',
+            'border-2 hover:border-brand-green hover:shadow-lg cursor-pointer mr-3',
+            isActive && 'border-2 border-brand-green',
         ),
         style: {
             display: 'inline-block',

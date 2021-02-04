@@ -3,13 +3,11 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
 } from "react-router-dom"
 import Header from "./Header/Header"
 import Footer from './Footer/Footer'
 import CardCustomization from './CardCustomization'
 import AboutPage from './AboutPage'
-import LoginPage from './LoginPage';
 
 const Routes = () => (  
     <Router>

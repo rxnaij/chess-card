@@ -1,7 +1,7 @@
 import React from 'react'
 import RadioButtonGroup from '../RadioButtonGroup/RadioButtonGroup'
 import { HTMLInputValue } from '../RadioButtonGroup/RadioButton'
-import { CardColorState } from '../types'
+import { CardColorState } from '../../types'
 import Konva from 'konva'
 import { Stage } from 'react-konva'
 
