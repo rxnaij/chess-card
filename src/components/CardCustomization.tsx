@@ -18,6 +18,9 @@ import { colorRadioButton, iconRadioButton, backgroundColorRadioButton, textColo
 // Card customization options
 import { cardColorOptions, cardIconOptions, backgroundColorValues, getTextColorOptions } from '../state/options'
 
+const authURL = 'https://chess-card-backend.herokuapp.com/'
+// const authURL = 'http://localhost:8000'
+
 // Main card customization component
 export default function CardCustomization() {
   const { accessToken, setAccessToken } = useLoginCtx()
@@ -105,7 +108,7 @@ export default function CardCustomization() {
                 </>
               : <>
                   <p>Log in using your Lichess account to start personalizing your chess card.</p>
-                  <a href="http://localhost:8000/">
+                  <a href={authURL}>
                     <Button>Log in</Button>
                   </a>
                 </>
