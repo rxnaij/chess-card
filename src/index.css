@@ -3,8 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;900&display=swap');
-@import url("http://db.onlinewebfonts.com/c/1926835283cbd17d05331a50e3039ada?family=lichess");
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700;900&display=swap');
+@font-face {
+  font-family: 'lichess';
+  src: url('assets/fonts/lichess.ttf');
+};
 
 /* body {
   margin: 0;
