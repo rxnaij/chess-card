@@ -18,8 +18,8 @@ import { colorRadioButton, iconRadioButton, backgroundColorRadioButton, textColo
 // Card customization options
 import { cardColorOptions, cardIconOptions, backgroundColorValues, getTextColorOptions } from '../state/options'
 
-// const authURL = 'https://chess-card-backend.herokuapp.com/'
-const authURL = 'http://localhost:8000'
+const authURL = 'https://chess-card-backend.herokuapp.com/'
+// const authURL = 'http://localhost:8000'
 
 // Main card customization component
 export default function CardCustomization() {
