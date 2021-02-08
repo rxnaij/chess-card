@@ -195,11 +195,11 @@ function Card({ username="Your username", ratings, color, icon = '', x, y, textC
             <Group>
                 <Rect
                     x={0}
-                    y={CARD_WIDTH * 2 / 3}
+                    y={CARD_WIDTH * 2 / 3 + 1}
                     width={CARD_WIDTH}
                     height={CARD_WIDTH / 3}
                     fill={foreground}
-                    cornerRadius={[0, 0, 10, 10]}
+                    cornerRadius={[0, 0, 16, 16]}
                 />
                 <Group>
                     <Text
