@@ -8,7 +8,7 @@ interface LoginState {
 }
 
 // placeholder state values for initialization
-const initialState = {
+const initialState: LoginState = {
     accessToken: null,
     setAccessToken: (val: string | null) => console.warn("No access token state")
 }

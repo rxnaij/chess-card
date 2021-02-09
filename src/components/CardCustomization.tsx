@@ -1,8 +1,9 @@
 // Business logic and types
-import React, { useState } from 'react'
+import React from 'react'
 import { CardColorState, CardIconState, Rating }  from '../types'
 import { Link } from 'react-router-dom'
 import { useLoginCtx } from '../state/LoginContext'
+import { useCanvasState, useCanvasReducer } from '../state/CanvasContext'
 import { removeAccessTokenFromUrl } from '../utils/fetchLogin'
 
 // Custom components
@@ -24,34 +25,27 @@ const authURL = 'https://chess-card-backend.herokuapp.com/'
 // Main card customization component
 export default function CardCustomization() {
   const { accessToken, setAccessToken } = useLoginCtx()
+  const { 
+    user,
+    ratings,
+    ratingsToRender,
+    cardColor,
+    icon,
+    bg,
+    textColor,
+    textColorOptions
+  } = useCanvasState()
+  const dispatch = useCanvasReducer()
 
-  // Card data states
-  const [user, setUser] = useState('')
-  const [ratings, setRatings] = useState<Rating[]>([])
-  const [ratingsToRender, setRatingsToRender] = useState<Rating[]>([])
-
-  // Card canvas customization states
-  const [cardColor, setCardColor] = useState<CardColorState>(cardColorOptions[0].value)
-  const [cardIcon, setCardIcon] = useState<CardIconState>(cardIconOptions[0].value)
-  const [bg, setBg] = useState<CardColorState>(backgroundColorValues[0].value)
-  const [textColorValues, setTextColorValues] = useState(getTextColorOptions(
-    cardColorOptions[0].value,
-    backgroundColorValues[0].value
-  ))
-  const [textColor, setTextColor] = useState<CardColorState>('#EFEFEF')
-
-  // Updates text color options based on current card and bg color
-  React.useEffect(() => {
-    const newColors = getTextColorOptions(cardColor, bg)
-    const newDefault = newColors.find(c => c.key === 'default')!.value
-    setTextColorValues(newColors)
-    if (cardColor !== newDefault) setTextColor(newDefault)
-  }, [cardColor, bg])
+  // const [textColorValues, setTextColorValues] = useState(getTextColorOptions(
+  //   cardColorOptions[0].value,
+  //   backgroundColorValues[0].value
+  // ))
 
   // Resets ratings selector when not logged in
   React.useEffect(() => {
-    setRatingsToRender([])
-  }, [accessToken])
+    dispatch({ type: 'update ratings to render', ratingsToRender: [] })
+  }, [accessToken, dispatch])
 
   // Retrieve data when logged in
   React.useEffect(() => {
@@ -74,8 +68,8 @@ export default function CardCustomization() {
             name: p,
             points: perfs[p].rating
           }))
-        setUser(username)
-        setRatings(newRatings)
+        dispatch({ type: 'update user', user: username })
+        dispatch({ type: 'update ratings', ratings: newRatings })
       } catch (error) {
         console.error("Error: user is undefined. Token is probably undefined.")
       }
@@ -85,10 +79,9 @@ export default function CardCustomization() {
       removeAccessTokenFromUrl()
       fetchData()
     } else {
-      setUser('')
-      setRatings([])
+      dispatch({ type: 'reset' })
     }
-  }, [accessToken, setAccessToken])
+  }, [accessToken, setAccessToken, dispatch])
 
   return (
     <div className="grid grid-cols-2 space-y-4">
@@ -122,9 +115,9 @@ export default function CardCustomization() {
                   value={ratingsToRender} 
                   onChange={(v: Rating) => {
                     if (ratingsToRender.includes(v)) {
-                      setRatingsToRender(prev => prev.filter(toStay => toStay !== v))
+                      dispatch({ type: 'update ratings to render', ratingsToRender: ratingsToRender.filter(toStay => toStay !== v) })
                     } else {
-                      setRatingsToRender(prev => prev.concat([v]))
+                      dispatch({ type: 'update ratings to render', ratingsToRender: ratingsToRender.concat([v]) })
                     }
                   }} 
                 />
@@ -133,28 +126,28 @@ export default function CardCustomization() {
                 name="cardColor"
                 label="Card color"
                 values={cardColorOptions}
-                onChange={(v: HTMLInputValue) => setCardColor(cardColorOptions.find(c => c.key === v)!.value)}
+                onChange={(v: HTMLInputValue) => dispatch({ type: 'update card color', cardColor: cardColorOptions.find(c => c.key === v)!.value })}
                 customRadioButton={colorRadioButton}
               />     
               <RadioButtonGroup<CardIconState>
                 name="cardIcon"
                 label="Icon"
                 values={cardIconOptions}
-                onChange={(v: HTMLInputValue) => setCardIcon(cardIconOptions.find(i => i.key === v)!.value)}
+                onChange={(v: HTMLInputValue) => dispatch({ type: 'update icon', icon: cardIconOptions.find(i => i.key === v)!.value })}
                 customRadioButton={iconRadioButton}
               />
               <RadioButtonGroup<CardColorState>
                 name="cardBackgroundColor"
                 label="Background color"
                 values={backgroundColorValues}
-                onChange={(v: HTMLInputValue) => setBg(backgroundColorValues.find(c => c.key === v)!.value)}
+                onChange={(v: HTMLInputValue) => dispatch({ type: 'update bg', bg: backgroundColorValues.find(c => c.key === v)!.value })}
                 customRadioButton={backgroundColorRadioButton}
               />
               <RadioButtonGroup<CardColorState>
                 name="textColor"
                 label="Text color"
-                values={textColorValues}
-                onChange={(v: HTMLInputValue) => setTextColor(textColorValues.find(c => c.key === v)!.value)}
+                values={textColorOptions}
+                onChange={(v: HTMLInputValue) => dispatch({ type: 'update text color', textColor: textColorOptions.find(c => c.key === v)!.value })}
                 customRadioButton={textColorRadioButton}
               />
             </fieldset>
@@ -165,7 +158,7 @@ export default function CardCustomization() {
         username={user}
         ratings={ratingsToRender}
         color={cardColor}
-        icon={cardIcon}
+        icon={icon}
         bg={bg}
         textColor={textColor}
       />
