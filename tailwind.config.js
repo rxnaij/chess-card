@@ -15,7 +15,7 @@ module.exports = {
         'brand-red': '#FF5AF5',
         'brand-green': '#62C370',
         'brand-blue': '#008DD5',
-        'brand-background': '#3A3A68',
+        'brand-background': '#2E2E2E',
       },
       typography: {
         DEFAULT: {

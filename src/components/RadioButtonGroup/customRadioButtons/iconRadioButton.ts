@@ -14,7 +14,7 @@ const iconRadioButton = (isActive: boolean, value: CardIconState): CustomRadio =
             borderRadius: '50%',
             background: `url(${value}) no-repeat`,
             backgroundSize: '50px',
-            backgroundPosition: 'center'
+            backgroundPosition: 'center',
         }
     }
 }
