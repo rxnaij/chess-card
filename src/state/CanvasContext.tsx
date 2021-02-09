@@ -26,7 +26,7 @@ const initialState: CanvasState = {
     cardColor: cardColorOptions[0].value,
     icon: cardIconOptions[0].value,
     bg: backgroundColorValues[0].value,
-    textColor: '#EFEFEF',
+    textColor: '#212121',
     textColorOptions: getTextColorOptions(cardColorOptions[0].value, backgroundColorValues[0].value)
 }
 
