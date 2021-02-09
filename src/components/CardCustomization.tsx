@@ -17,7 +17,7 @@ import RatingSelector from './RatingSelector/RatingSelector'
 import { colorRadioButton, iconRadioButton, backgroundColorRadioButton, textColorRadioButton } from './RadioButtonGroup/customRadioButtons/customRadioButtons'
 
 // Card customization options
-import { cardColorOptions, cardIconOptions, backgroundColorValues, getTextColorOptions } from '../state/options'
+import { cardColorOptions, cardIconOptions, backgroundColorValues } from '../state/options'
 
 const authURL = 'https://chess-card-backend.herokuapp.com/'
 // const authURL = 'http://localhost:8000'
@@ -36,11 +36,6 @@ export default function CardCustomization() {
     textColorOptions
   } = useCanvasState()
   const dispatch = useCanvasReducer()
-
-  // const [textColorValues, setTextColorValues] = useState(getTextColorOptions(
-  //   cardColorOptions[0].value,
-  //   backgroundColorValues[0].value
-  // ))
 
   // Resets ratings selector when not logged in
   React.useEffect(() => {
