@@ -1,11 +1,11 @@
 import React from 'react'
 import Konva from 'konva'
+import { Rating, CardColorState, CardIconState } from '../../types'
 import Button from '../TextInput/Button'
 import { Stage, Layer, Rect, Text, Group, Image } from 'react-konva'
 import useImage from 'use-image'
-import { useCenteredOffset, useCenteredOffsetX } from './useCenteredOffset'
-import { Rating, CardColorState, CardIconState } from '../../types'
-import { getLichessIconChar } from './getLichessIconChar'
+import { useCenteredOffset, useCenteredOffsetX } from './util/useCenteredOffset'
+import { getLichessIconChar } from './util/getLichessIconChar'
 import { useLoginCtx } from '../../state/LoginContext'
 
 interface BackgroundProps {
