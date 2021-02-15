@@ -13,7 +13,7 @@ const Footer = ({className}: FooterProps) => (
             className
         )}>
             <nav>
-                <ul className="flex flex-row space-x-8">
+                <ul className="flex flex-row flex-wrap space-x-8">
                     <li><Link to="/about">About</Link></li>
                     <li className="text-white text-opacity-50"><a href="https://github.com/rxnaij/chess-card" className="hover:underline">GitHub</a> · Made by <a href="https://github.com/rxnaij" className="hover:underline">@rxnaij</a></li>
                     <li className="text-white text-opacity-50">This app is not affiliated with Lichess.</li>

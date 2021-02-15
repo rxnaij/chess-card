@@ -59,8 +59,8 @@ export default function CardCustomization() {
   }, [accessToken, setAccessToken, dispatch])
 
   return (
-    <div className="grid grid-cols-2">
-      <div className="">
+    <div className="grid grid-cols-1 md:grid-cols-2">
+      <div className="order-last md:order-first">
         <div className="flex justify-between items-center self-stretch mb-12">
           {
             accessToken
@@ -120,14 +120,17 @@ export default function CardCustomization() {
           </fieldset>
         </form>
       </div>
-      <Canvas 
-        username={user}
-        ratings={ratingsToRender}
-        color={cardColor}
-        icon={icon}
-        bg={bg}
-        textColor={textColor}
-      />
+      <div className="order-first md:order-last mb-4 md:mb-0">
+        <Canvas 
+          username={user}
+          ratings={ratingsToRender}
+          color={cardColor}
+          icon={icon}
+          bg={bg}
+          textColor={textColor}
+        />
+      </div>
+      
     </div>
   )
 }
