@@ -55,7 +55,7 @@ const Background = ({ width, height, color }: BackgroundProps) => {
                 y={0}
                 width={width}
                 height={height}
-                cornerRadius={10}
+                cornerRadius={0 }
                 {...getFillProps(color)}
             />
             <Text
@@ -248,18 +248,19 @@ export default function Canvas (props: CardProps & { bg: CardColorState }) {
 
     return (
         <div className="flex-flex-col align-center">
-            <div className="flex justify-center">
+            <div className="flex justify-center" id="stage">
                 <Stage width={CANVAS_WIDTH} height={CANVAS_HEIGHT} ref={stageRef}>
                     <Background width={CANVAS_WIDTH} height={CANVAS_HEIGHT} color={props.bg} />
                     <Card {...props} x={CANVAS_WIDTH / 2} y={CANVAS_HEIGHT / 2} />
                 </Stage>
             </div>
             {
-                accessToken &&
+                // accessToken &&
                 <div className="flex flex-row justify-center mt-8">
                     <Button className="mr-4" onClick={handleExport}>Download</Button>
                 </div>
             }
+            <a href={stageRef.current?.toDataURL({ pixelRatio: 2 })} download>Test download image</a>
         </div>
     )
 }
