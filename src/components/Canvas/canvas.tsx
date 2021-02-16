@@ -241,7 +241,7 @@ export default function Canvas (props: CardProps & { bg: CardColorState }) {
 
     // download canvas as image
     const handleExport = () => {
-        const uri = stageRef.current.toDataURL();
+        const uri = stageRef.current.toDataURL({ pixelRatio: window.devicePixelRatio > 2 ? window.devicePixelRatio : 2 });
         console.log(uri);
         downloadURI(uri, 'stage.png');  // todo: change file name
     };
@@ -255,12 +255,12 @@ export default function Canvas (props: CardProps & { bg: CardColorState }) {
                 </Stage>
             </div>
             {
-                // accessToken &&
+                accessToken &&
                 <div className="flex flex-row justify-center mt-8">
                     <Button className="mr-4" onClick={handleExport}>Download</Button>
                 </div>
             }
-            <a href={stageRef.current?.toDataURL({ pixelRatio: 2 })} download>Test download image</a>
+            {/* <a href={stageRef.current?.toDataURL({ pixelRatio: 2 })} download>Test download image</a> */}
         </div>
     )
 }
