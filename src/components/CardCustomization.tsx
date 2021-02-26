@@ -3,7 +3,7 @@ import React from 'react'
 import { CardColorState, CardIconState, Rating }  from '../types'
 import { Link } from 'react-router-dom'
 import { useLoginCtx } from '../state/LoginContext'
-import { useCanvasState, useCanvasReducer } from '../state/CanvasContext'
+import { useCanvasState } from '../state/CanvasContext'
 import { fetchData, removeAccessTokenFromUrl } from '../utils/fetchLogin'
 
 // Custom components
@@ -28,13 +28,9 @@ export default function CardCustomization() {
     user,
     ratings,
     ratingsToRender,
-    cardColor,
-    icon,
-    bg,
-    textColor,
     textColorOptions
-  } = useCanvasState()
-  const dispatch = useCanvasReducer()
+  } = useCanvasState().state
+  const { dispatch } = useCanvasState()
 
   // Resets ratings selector when not logged in
   React.useEffect(() => {
@@ -121,14 +117,7 @@ export default function CardCustomization() {
         </form>
       </div>
       <div className="order-first md:order-last mb-4 md:mb-0">
-        <Canvas 
-          username={user}
-          ratings={ratingsToRender}
-          color={cardColor}
-          icon={icon}
-          bg={bg}
-          textColor={textColor}
-        />
+        <Canvas />
       </div>
       
     </div>

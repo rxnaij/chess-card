@@ -116,11 +116,7 @@ CanvasCtx.displayName = 'CanvasContext'
 // State management hooks
 
 export function useCanvasState() {
-    return useContext(CanvasCtx)!.state
-}
-
-export function useCanvasReducer() {
-    return useContext(CanvasCtx)!.dispatch
+    return useContext(CanvasCtx)
 }
 
 // Context provider component
